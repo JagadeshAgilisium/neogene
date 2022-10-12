@@ -7,7 +7,7 @@ export default function ViewPatientTask({ fetchedPatientTask, status }) {
   const patientTask = useSelector((state)=>state.subjectTask.subjectTask)
 console.log( patientTask.map((data)=>data.data ))
 const navigate = useNavigate();
-
+// console.log(fetchedPatientTask[0]?.SubjectID)
   if (status === 200) {
     return (
       <>
@@ -54,7 +54,7 @@ const navigate = useNavigate();
                           {/* <span className='bg-yellow-100 text-yellow-500 border border-yellow-500 rounded px-6 py-1'>
                             {fetchedPatientTask.Status}
                           </span>{' '} */}
-                          <button className='px-5 py-1 bg-blue-500 text-white border rounded border-blue-700 uppercase hover:text-white hover:bg-blue-600 ' onClick={()=>{navigate("/patient/:id/scan")}}>Scan</button>{' '}
+                          <button className='px-5 py-1 bg-blue-500 text-white border rounded border-blue-700 uppercase hover:text-white hover:bg-blue-600 ' onClick={()=>{navigate(`/patient/${fetchedPatientTask?.SubjectID}/scan`)}}>Scan</button>{' '}
                         </div>
                       </td>
                     ) : fetchedPatientTask.Status === 'Pending' ? (

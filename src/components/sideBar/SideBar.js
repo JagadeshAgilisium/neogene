@@ -10,11 +10,11 @@ export default function SideBar() {
 
   return (
     <React.Fragment>
-      <section>
-        <div className='text-black'>
+      <section className='fixed w-1/6'>
+        <div className='text-black w-full'>
           {SideBarData.map((item, index) => {
             return (
-              <div key={index}>
+              <div key={index} className="w-5/6">
                 <NavLink
                   to={item.path}
                   className={({ isActive }) =>

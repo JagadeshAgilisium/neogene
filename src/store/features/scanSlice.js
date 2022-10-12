@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 const scannedData = {
   batchRecord: [],
   coi: [],
+  refresh:false,
 }
 const scanSlice = createSlice({
   name: 'scan',
@@ -13,6 +14,9 @@ const scanSlice = createSlice({
     },
     coiScan(state, action) {
       state.coi = [action.payload]
+    },
+    shouldRefresh(state, action) {
+      state.refresh = [action.payload]
     },
   },
 })

@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { subject } from '../store/features/subjectSlice'
+import { subject } from '../../store/features/subjectSlice'
 import QRScanner from '../QRScanner/QRScanner'
-import { scan } from '../store/features/scanSlice'
+import { scan } from '../../store/features/scanSlice'
 
 
 function S2() {
@@ -30,12 +30,8 @@ function S2() {
             {selector2.subject.map((details, i) => (
               <div key={i} className="">
                 <div className="grid grid-cols-2 justify-items-start">
-                  <div className="font-bold text-md"> Batch Number</div>
-                  <div>{details.batchNumber}</div>
-                </div>
-                <div className="grid grid-cols-2 justify-items-start">
                   <div className="font-bold text-md"> Patient name</div>
-                  <div>{details.patientName}</div>
+                  <div className='font-semibold'>{details.patientName}</div>
                 </div>
                 <div className="grid grid-cols-2 justify-items-start ">
                   <div className="font-bold text-md">COI Number</div>
@@ -45,8 +41,12 @@ function S2() {
                   <div className="font-bold text-md">DIN Number</div>
                   <div>{details.DINNumber}</div>
                 </div>
+                <div className="grid grid-cols-2 justify-items-start">
+                  <div className="font-bold text-md"> Batch Number</div>
+                  <div>{details.batchNumber}</div>
+                </div>
                 <div className="grid grid-cols-2 justify-items-start  ">
-                  <div className="font-bold text-md">Subject ID Number</div>
+                  <div className="font-bold text-md">Subject Task ID</div>
                   <div>{details.subjectIDNumber}</div>
                 </div>
                 <div className="grid grid-cols-2 justify-items-start  ">

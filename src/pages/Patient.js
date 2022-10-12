@@ -50,7 +50,7 @@ export default function Patient() {
         DINNumber: response.data.data[0].DIN,
         subjectIDNumber: response.data.data[0].SubjectNumber,
         operatorName: "Mitzi simpson",
-        operatorId: "1"
+        operatorId: "2"
       }
     } catch (error) {
       console.error('error')
