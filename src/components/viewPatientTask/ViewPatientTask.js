@@ -1,5 +1,13 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
+import { useNavigate } from "react-router-dom";
+
 export default function ViewPatientTask({ fetchedPatientTask, status }) {
+
+  const patientTask = useSelector((state)=>state.subjectTask.subjectTask)
+console.log( patientTask.map((data)=>data.data ))
+const navigate = useNavigate();
+
   if (status === 200) {
     return (
       <>
@@ -34,22 +42,22 @@ export default function ViewPatientTask({ fetchedPatientTask, status }) {
                     <td className='py-4 px-6'>
                       {fetchedPatientTask.Task.ProcessName}
                     </td>
-                    {fetchedPatientTask.Status == 'Completed' ? (
+                    {fetchedPatientTask.Status === 'Completed' ? (
                       <td className='py-4 px-6 '>
                         <span className='bg-green-100 text-green-500 border border-green-500 rounded px-1 py-1'>
                           {fetchedPatientTask.Status}
                         </span>
                       </td>
-                    ) : fetchedPatientTask.Status == 'WIP' ? (
+                    ) : fetchedPatientTask.Status === 'WIP' ? (
                       <td className='py-4 px-6 text-green-900'>
                         <div className='flex flex-row flex-auto gap-9'>
                           {/* <span className='bg-yellow-100 text-yellow-500 border border-yellow-500 rounded px-6 py-1'>
                             {fetchedPatientTask.Status}
                           </span>{' '} */}
-                          <button className='px-5 py-1 bg-blue-500 text-white border rounded border-blue-700 uppercase'>Scan</button>{' '}
+                          <button className='px-5 py-1 bg-blue-500 text-white border rounded border-blue-700 uppercase hover:text-white hover:bg-blue-600 ' onClick={()=>{navigate("/patient/:id/scan")}}>Scan</button>{' '}
                         </div>
                       </td>
-                    ) : fetchedPatientTask.Status == 'Pending' ? (
+                    ) : fetchedPatientTask.Status === 'Pending' ? (
                       <td className='py-4 px-6 text-grey-900'>
                         {/* <span className='bg-grey-100 text-grey-500 border border-black rounded  px-3 py-1'>
                         Pending

@@ -8,6 +8,8 @@ export default function NavPage() {
    <Routes>
     <Route path='/patients' element={<Patients/>}/>
     <Route path='/patient/:id' element={<Patient/>}/>
+    <Route path='/patient/:id/scan' element={<Patient/>}/>
+
    </Routes>
   )
 }
