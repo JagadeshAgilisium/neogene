@@ -36,7 +36,7 @@ export default function Patient() {
 
   const fetchDataById = async (id) => {
     const response = await axios.get(
-      `http://localhost:8000/getSubjectById/${id}`
+      `${process.env.NEOGENE_SERVER_URL}/getSubjectById/${id}`
     ).catch((error) => {console.log("Error at fetchPatientTask");alert("OOps! Records doesn't exists")}) 
     try {
       setFetchedData(response.data.data[0])
@@ -58,7 +58,7 @@ export default function Patient() {
   }
   const fetchSubjectTask = async (id) => {
     const response = await axios.get(
-      `http://localhost:8000/getSubjectTasks/${id}`
+      `https://tx4iostqze.execute-api.us-east-1.amazonaws.com/getSubjectTasks/${id}`
     )
     dispatch(subjectTask.subjectTaskSFetch(response.data))
     setFetchedPatientTask(response.data)

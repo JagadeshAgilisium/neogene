@@ -10,7 +10,7 @@ export default function Patients() {
   const navigate=useNavigate();
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/getAllSubject')
+      const response = await axios.get(`${process.env.NEOGENE_SERVER_URL}/getAllSubject`)
       setAllPatientData(response.data.data)
     } catch (error) {
       console.log(error)
@@ -24,7 +24,6 @@ export default function Patients() {
     <>
     <div className='flex flex-row'>
       <div className=''></div>
-      <button clas></button>
     </div>
      <SearchPatient></SearchPatient>
       <div className='overflow-x-auto'>

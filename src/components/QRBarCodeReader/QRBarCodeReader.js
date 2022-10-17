@@ -3,71 +3,56 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { scan } from '../../store/features/scanSlice'
 import { temp } from '../../store/features/tempSlice'
-import { useNavigate } from "react-router-dom";
 
 
 
-const QRScanner = ({ html5QrCode, setHtml5QrCode, hide, setHide }) => {
+const QRBarCodeReader = ({ html5QrCode, setHtml5QrCode }) => {
 
   const [scannerState, setScannerState] = useState(false)
 
-  const navigate = useNavigate();
+  const dispatch = useDispatch()
+  const subjectSelector = useSelector((state) => state.subject);
+  const batchSelector = useSelector((state) => state.scan.batchRecord);
+
+  const isBatchSelector = useSelector((state) => state.temp.isBatchRecord);
+  const isCoiSelector = useSelector((state) => state.temp.isCoi);
 
   var buttonVisibility = "visible";
 
-  var dat2 = useSelector((state) => state.temp.isCoi);
-  var dat1 = useSelector((state) => state.temp.isBatchRecord);
-
-  var dat3 = useSelector((state) => state.temp.isFirstVisitBatch);
-  var dat4 = useSelector((state) => state.temp.isFirstVisitCOI);
-
-
-
-  console.log("Important", dat1, dat2);
-  if (dat1 && dat2) {
+  if (isBatchSelector && isCoiSelector) {
     buttonVisibility = "invisible";
+  }
+  var batchFilter = batchSelector.filter(batch => (batch.ScanType === "Batch" && batch.Result === "Failure"))
+  var coiFilter = batchSelector.filter(coi => (coi.ScanType === "COI" && coi.Result === "Failure"))
+
+  const condition = batchSelector.filter(batch => ((batch.ScanType === "Batch" && batch.Result === "Success") || (batch.ScanType === "COI" && batch.Result === "Success")))
+
+  if (condition.length === 2) {
+    batchFilter.splice(0, batchFilter.length)
+    coiFilter.splice(0, coiFilter.length)
   }
 
 
-  const dispatch = useDispatch()
-  const selector1 = useSelector((state) => state.scan.batchRecord)
-  const selector2 = useSelector((state) => state.scan.coi)
-  const subjectSelector = useSelector((state) => state.subject);
-
-//   const SubjectTask =useSelector((state) => state.subjectTask);
-
-// function getSubjectTaskID() {
-//   SubjectTask.subjectTask[0].data.map((dat) =>{
-//     if (dat.Status==="WIP"){
-//       console.log(dat)
-//       console.log("WIP", dat.SubjectTaskID)
-//       return dat.SubjectTaskID
-//     }
-//   })
-// }
-
-console.log(subjectSelector)
   if (subjectSelector.subject.length > 0) {
     var coi = subjectSelector.subject[0].COINumber;
     var batch = subjectSelector.subject[0].batchNumber;
-    console.log("Batch & COI : ", batch, coi);
-    var elxi = (dat1 === false && dat2 === false) ? "Batch" : "COI";
-    console.log("Elxi : ", elxi);
+    var elxi = (isBatchSelector === false && isCoiSelector === false) ? "Batch" : "COI";
     var detail = {
       OperatorName: subjectSelector.subject[0].operatorName,
-      OperatorID:subjectSelector.subject[0].operatorId,
+      OperatorID: subjectSelector.subject[0].operatorId,
       ScanDate: new Date().toLocaleString().split(",").join(""),
-      ScanTypeID: elxi==="Batch"?"1":"2",
+      ScanTypeID: elxi === "Batch" ? "1" : "2",
       ScanType: elxi,
-      SubjectTaskID:"1"
+      SubjectTaskID: ""
     };
   }
 
   const qrboxFunction = function (viewfinderWidth, viewfinderHeight) {
-    let minEdgePercentage = 0.8
+    let minEdgePercentage = 0.7
     let minEdgeSize = Math.min(viewfinderWidth, viewfinderHeight)
     let qrboxSize = Math.floor(minEdgeSize * minEdgePercentage)
-    return true
+    let isQR = true;
+    return isQR
       ? {
         width: qrboxSize,
         height: qrboxSize,
@@ -77,6 +62,7 @@ console.log(subjectSelector)
         height: qrboxSize / 2,
       }
   }
+
   const qrConfig = { fps: 10, qrbox: qrboxFunction }
 
   const qrCodeSuccessCallback = (decodedText, decodedResult) => {
@@ -84,7 +70,7 @@ console.log(subjectSelector)
     const value = {
       ...detail,
       ScanRecord: decodedResult.decodedText,
-      Comments:'None',
+      Comments: 'None',
       Result:
         elxi === "Batch"
           ? batch === decodedResult.decodedText
@@ -94,18 +80,18 @@ console.log(subjectSelector)
             ? "Success"
             : "Failure",
     };
-    
 
-    console.log(value);
-    // dispatch(scann.batchScan(value));
-    if (dat1 === false && dat2 === false) {
-      console.log("Dispatched Batch scan");
+
+    // console.log("Value : ",value);
+
+    if (isBatchSelector === false && isCoiSelector === false) {
+      // console.log("Dispatched Batch scan");
       dispatch(scan.batchScan(value))
       if (value.Result === "Success") {
         dispatch(temp.isBatchScan(true))
       }
-    } else if (dat1 === true && dat2 === false) {
-      console.log("Dispatched coi scan");
+    } else if (isBatchSelector === true && isCoiSelector === false) {
+      // console.log("Dispatched coi scan");
       dispatch(scan.batchScan(value))
       if (value.Result === "Success") {
         dispatch(temp.isCoiScan(true))
@@ -151,14 +137,6 @@ console.log(subjectSelector)
       .catch((err) => {
         console.log('Camera start error')
       })
-      if(dat1==="false" && dat2==="false")
-      {
-        dispatch(temp.isFirstBatch(false))
-      }else if(dat1==="true" && dat2==="false"){
-        dispatch(temp.isFirstCOI(false))
-      }
-    console.log("HTML5QRCODE Start : ", html5QrCode)
-
   }
 
   useEffect(() => {
@@ -181,13 +159,13 @@ console.log(subjectSelector)
                   className='rounded-lg bg-purple-700 py-2 px-2 text-white hover:bg-purple-200 hover:text-purple-800'
                   onClick={() => startScanning()}
                 >
-                  {dat3?"Start Batch Scan": "Rescan Batch"}
+                  {batchFilter.length === 0 ? "Start Batch Scan" : "Rescan Batch"}
                 </button> :
                 <button
                   className={`rounded-lg bg-purple-800 py-2 px-2 text-white hover:bg-purple-200 hover:text-purple-800 ${buttonVisibility}`}
                   onClick={() => startScanning()}
                 >
-                  {dat4?"Start COI Scan": "Rescan COI"}
+                  {coiFilter.length === 0 ? "Start COI Scan" : "Rescan COI"}
                 </button>
             ) : (
               !useSelector((state) => state.temp.isBatchRecord) ?
@@ -209,4 +187,4 @@ console.log(subjectSelector)
     </>
   )
 }
-export default QRScanner
+export default QRBarCodeReader

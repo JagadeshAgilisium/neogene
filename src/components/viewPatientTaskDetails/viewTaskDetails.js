@@ -6,7 +6,7 @@ function ViewTaskDetails() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/getTaskDetails')
+        const response = await axios.get(`${process.env.NEOGENE_SERVER_URL}/getTaskDetails`)
         setTaskDetails(response.data.data)
         console.log(response.data.data)
       } catch (error) {

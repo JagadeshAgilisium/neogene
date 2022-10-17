@@ -1,20 +1,24 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
+
 function Table() {
   const [batchSelector, setBatchSelector] = useState([]);
   const data = useSelector((state) => state.scan.batchRecord);
   const shouldRefresh = useSelector((state) => state.scan.refresh);
-  console.log("Data @ Table : ",data)
+
+  console.log("Data @ Table : ", data)
+
   const zebraStripe = (i) => {
-    return (i+1)%2===0 ? "bg-blue-300":"bg-white"
+    return (i + 1) % 2 === 0 ? "bg-blue-300" : "bg-white"
   };
-  
+
   useEffect(() => {
     setBatchSelector(data);
-  }, [data,shouldRefresh]);
+  }, [data, shouldRefresh]);
+
   return (
-    <div className="flex flex-col w-full px-10 pt-10">
+    <div className="flex flex-col w-full px-2 pt-10">
       <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8 ">
           <div className="overflow-hidden">

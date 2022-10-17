@@ -28,7 +28,7 @@ export default function SearchPatient() {
 
   const fetchData = async (sendingSingleData) => {
     const response = await axios.get(
-      `http://localhost:8000/getSubject/${sendingSingleData}`
+      `${process.env.NEOGENE_SERVER_URL}/getSubject/${sendingSingleData}`
     )
    
     try {
